@@ -127,11 +127,11 @@ object ChannelRepository {
 
     /**
      * Resolves an icon UUID to an image URL, falling back to a default icon if the
-     * UUID is missing or if the resolved resource turns out to be an SVG.
+     * UUID is missing or if the resolved resource turns out to be.. not supported or something.
      */
     private fun resolveIconUrl(iconUuid: String): String {
         if (iconUuid.isEmpty()) {
-            return "https://live.mistwx.com/logos/streaming_fallbackicon.png"
+            return "https://file.garden/anfFhGxO-geaMQ6-/MistDefaultChannelIconWhite.png"
         }
 
         val url = "https://api.mistlive.tv/api/v1.5/image/$iconUuid?width=256&height=256&fit=inside"
@@ -146,12 +146,12 @@ object ChannelRepository {
             val response = connection.inputStream.bufferedReader().use { it.readText() }
             val firstChars = response.take(5).lowercase()
             if (firstChars == "<?xml" || firstChars == "<svg ") {
-                "https://live.mistwx.com/logos/streaming_fallbackicon.png"
+                "https://file.garden/anfFhGxO-geaMQ6-/MistDefaultChannelIconWhite.png"
             } else {
                 url
             }
         } catch (e: Exception) {
-            "https://live.mistwx.com/logos/streaming_fallbackicon.png"
+            "https://file.garden/anfFhGxO-geaMQ6-/MistDefaultChannelIconWhite.png"
         }
     }
 
