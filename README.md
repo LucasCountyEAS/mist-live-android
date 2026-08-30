@@ -25,7 +25,7 @@ Download the latest `MistLive.apk` from the [Releases](../../releases) page.
 There are a couple of ways to get the APK onto your device:
 
 **Option A: Sideload with a file manager app**
-1. Install a file manager app (or the [Downloader](https://play.google.com/store/apps/details?id=com.esaba.downloader) app) from the Play Store on your Android TV.
+1. Install a file manager app from the Play Store on your Android TV.
 2. Use it to download `MistLive.apk` directly, or transfer it via USB drive.
 3. Open the file and select **Install**.
 
