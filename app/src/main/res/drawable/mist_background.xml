@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base dark color -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/mist_background" />
+        </shape>
+    </item>
+
+    <!-- The PNG Background -->
+    <item>
+        <bitmap
+            android:src="@drawable/mistbg2026aero"
+            android:gravity="fill" />
+    </item>
+
+    <!-- Optional: A slight dark overlay to improve text readability -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#80000000" />
+        </shape>
+    </item>
+</layer-list>

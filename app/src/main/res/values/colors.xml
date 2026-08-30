@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mist brand palette -->
+    <color name="mist_background">#0D0D1A</color>
+    <color name="mist_brand">#0A0A18</color>
+    <color name="mist_accent">#00D4FF</color>
+    <color name="mist_card_bg">#1A1A2E</color>
+    <color name="mist_text_primary">#FFFFFF</color>
+    <color name="mist_text_secondary">#AAAACC</color>
+    <color name="mist_live_red">#E94560</color>
+    <color name="mist_badge_blue">#005A70</color>
+</resources>

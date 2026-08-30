@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mist</string>
+    <string name="channel_guide_title">Mist TV Guide</string>
+    <string name="live_label">LIVE</string>
+    <string name="stream_error">Unable to load stream. Please check your connection.</string>
+</resources>
