@@ -111,6 +111,8 @@ class MistTitleView(context: Context) : FrameLayout(context), TitleViewAdapter.P
 class BrowseFragment : BrowseSupportFragment() {
 
     private lateinit var rowsAdapter: ArrayObjectAdapter
+    private var hasLoadedOnce = false
+    private var returningFromPlayback = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -136,7 +138,14 @@ class BrowseFragment : BrowseSupportFragment() {
 
     override fun onResume() {
         super.onResume()
-        loadChannels()
+        // Only refresh channels on the very first load (app start) or right after
+        // returning from a stream — not on every resume (e.g. sidebar toggling,
+        // app backgrounding/foregrounding without leaving the guide).
+        if (!hasLoadedOnce || returningFromPlayback) {
+            hasLoadedOnce = true
+            returningFromPlayback = false
+            loadChannels()
+        }
     }
 
     private fun setupTransitionListener() {
@@ -161,7 +170,7 @@ class BrowseFragment : BrowseSupportFragment() {
         lifecycleScope.launch {
             ChannelRepository.refreshChannels()
 
-            rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+            rowsAdapter = ArrayObjectAdapter(ListRowPresenter().apply { shadowEnabled = false })
 
             // Pass long click listener to presenter
             val cardPresenter = ChannelCardPresenter { channel ->
@@ -227,6 +236,7 @@ class BrowseFragment : BrowseSupportFragment() {
         onItemViewClickedListener = OnItemViewClickedListener { _, item, _, _ ->
             if (item is Channel) {
                 RecentChannelsManager.addRecentChannel(requireContext(), item.id)
+                returningFromPlayback = true
                 val intent = Intent(requireContext(), PlaybackActivity::class.java).apply {
                     putExtra(PlaybackActivity.EXTRA_CHANNEL, item)
                 }

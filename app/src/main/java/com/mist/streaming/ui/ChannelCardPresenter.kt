@@ -65,6 +65,8 @@ class ChannelCardPresenter(private val onLongClickListener: ((Channel) -> Unit)?
         val cardView = ImageCardView(context).apply {
             isFocusable = true
             isFocusableInTouchMode = true
+            elevation = 0f
+            stateListAnimator = null
             setMainImageDimensions(
                 dpToPx(context, CARD_WIDTH_DP),
                 dpToPx(context, CARD_HEIGHT_DP)
@@ -72,6 +74,10 @@ class ChannelCardPresenter(private val onLongClickListener: ((Channel) -> Unit)?
             setBackgroundColor(ContextCompat.getColor(context, R.color.mist_card_bg))
             setCardType(ImageCardView.CARD_TYPE_MAIN_ONLY)
         }
+        // ImageCardView's internal mainImageView defaults to CENTER_CROP regardless of
+        // Glide's own transform, which is why non-16:9 thumbnails were still filling/cropping
+        // the box. Overriding it here to letterbox instead.
+        cardView.mainImageView.scaleType = ImageView.ScaleType.FIT_CENTER
 
         val viewerCountView = TextView(context).apply {
             tag = "viewer_count"
@@ -129,17 +135,23 @@ class ChannelCardPresenter(private val onLongClickListener: ((Channel) -> Unit)?
                 dpToPx(context, CARD_WIDTH_DP),
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
+            background = ContextCompat.getDrawable(context, R.drawable.info_row_outline)
             setPadding(dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8), dpToPx(context, 8))
             addView(logoView)
             addView(textStack)
         }
 
         // Root just stacks the original (untouched) cardView above our info row.
-        // No focus/click changes here — cardView keeps its normal Leanback focus behavior.
         val root = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             addView(cardView)
             addView(infoRow)
+        }
+
+        // Raise the whole root above sibling rows while focused, so the card's
+        // built-in focus-zoom doesn't get visually underlapped by the row below it.
+        cardView.setOnFocusChangeListener { _, hasFocus ->
+            root.z = if (hasFocus) 10f else 0f
         }
 
         return ChannelViewHolder(root, cardView, logoView, titleView, descriptionView)
@@ -182,7 +194,6 @@ class ChannelCardPresenter(private val onLongClickListener: ((Channel) -> Unit)?
             .load(channel.thumbnailUrl)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
-            .centerCrop()
             .into(object : CustomTarget<Drawable>() {
                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                     cancelPlaceholder(cardView)
